@@ -29,7 +29,7 @@ router.get('/', function(req, res){
           // console.log(result); // Good for debugging
           res.send(result.rows);
         }
-      })
+      });
     }
   });
 });
@@ -55,9 +55,32 @@ router.post('/add', function(req, res){
         } else {
           res.sendStatus(201);
         }
-      })
+      });
     }
   });
+});
+
+router.delete('/delete/:bookId', function(req, res) {
+  console.log('Deleting book: ', req.params.bookId);
+  // pool.connect(function(errorConnectingToDatabase, db, done){
+  //   if(errorConnectingToDatabase) {
+  //     console.log('Error connecting to the database.');
+  //     res.send(500);
+  //   } else {
+  //     // We connected!!!!
+  //     db.query('INSERT INTO "books" ("author", "title")' +
+  //              ' VALUES ($1,$2);',
+  //              [author, title], function(queryError, result){
+  //       done();
+  //       if(queryError) {
+  //         console.log('Error making query.');
+  //         res.send(500);
+  //       } else {
+  //         res.sendStatus(201);
+  //       }
+  //     });
+  //   }
+  // });
 });
 
 module.exports = router;

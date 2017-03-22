@@ -7,10 +7,14 @@ $(document).ready(function(){
 
   $('#books').on('click', '.delete', function(){
     console.log('Delete book: '+ $(this).data('book'));
-    // $.ajax({
-    //   type: 'DELETE', // Similar SELECT or GET
-    //   url: '/books/delete/' + id // e.g. /books/delete/53
-    // });
+    bookId = $(this).data('book');
+    $.ajax({
+      type: 'DELETE', // Similar SELECT or GET
+      url: '/books/delete/' + bookId, // e.g. /books/delete/53
+      success: function(res) {
+        // refresh books list
+      }
+    });
   });
 
   $('#books').on('click', '.edit', function(){
