@@ -61,26 +61,26 @@ router.post('/add', function(req, res){
 });
 
 router.delete('/delete/:bookId', function(req, res) {
-  console.log('Deleting book: ', req.params.bookId);
-  // pool.connect(function(errorConnectingToDatabase, db, done){
-  //   if(errorConnectingToDatabase) {
-  //     console.log('Error connecting to the database.');
-  //     res.send(500);
-  //   } else {
-  //     // We connected!!!!
-  //     db.query('INSERT INTO "books" ("author", "title")' +
-  //              ' VALUES ($1,$2);',
-  //              [author, title], function(queryError, result){
-  //       done();
-  //       if(queryError) {
-  //         console.log('Error making query.');
-  //         res.send(500);
-  //       } else {
-  //         res.sendStatus(201);
-  //       }
-  //     });
-  //   }
-  // });
+  var bookId = req.params.bookId; // store bookId in variable for deletion
+  console.log('Deleting book: ', bookId);
+  // DELETE FROM "books" WHERE "id" = bookId
+  pool.connect(function(errorConnectingToDatabase, db, done){
+    if(errorConnectingToDatabase) {
+      console.log('Error connecting to the database.');
+      res.send(500);
+    } else {
+      // We connected!!!!
+      db.query(('DELETE FROM books WHERE id = ' + bookId), function(queryError, result) {
+        done();
+        if(queryError) {
+          console.log('Error making query.');
+          res.send(500);
+        } else {
+          res.sendStatus(201);
+        }
+      }); // end db.query
+    } // end errorConnectingToDatabase if/else
+  });
 });
 
 module.exports = router;

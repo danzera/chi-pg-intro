@@ -13,6 +13,7 @@ $(document).ready(function(){
       url: '/books/delete/' + bookId, // e.g. /books/delete/53
       success: function(res) {
         // refresh books list
+        getBooks();
       }
     });
   });
@@ -32,9 +33,15 @@ $(document).ready(function(){
     if(editing) {
       editing = false;
       $('#formTitle').text("Add new entry");
-      // $.ajax({
-      //   type: "PUT", // Similar to POST (data & req.body)
-      // });
+      $.ajax({
+        type: "PUT", // Similar to POST (data & req.body)
+        url: "books/update/" + bookId,
+        data: {title: $('#title').val(), author:$('#author').val()},
+        success: function(response) {
+          // Refresh our data
+          getBooks();
+        }
+      });
     } else {
       $.ajax({
         type: "POST",
