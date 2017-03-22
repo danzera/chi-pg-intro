@@ -72,6 +72,8 @@ function getBooks() {
         $el.append('<td>' + book.id + '</td>');
         $el.append('<td>' + book.author + '</td>');
         $el.append('<td>' + book.title + '</td>');
+        $el.append('<td>' + book.publisher + '</td>');
+        $el.append('<td>' + book.year + '</td>');
         $el.append('<td><button class="delete" data-book="' +
         book.id + '">Delete</button></td>');
         $el.append('<td><button class="edit" data-book="' +
