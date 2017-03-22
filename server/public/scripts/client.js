@@ -35,7 +35,7 @@ $(document).ready(function(){
       $('#formTitle').text("Add new entry");
       $.ajax({
         type: "PUT", // Similar to POST (data & req.body)
-        url: "books/update/" + bookId,
+        url: "books/update/" + bookId, // e.g. /books/update/53
         data: {title: $('#title').val(), author:$('#author').val()},
         success: function(response) {
           // Refresh our data

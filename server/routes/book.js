@@ -83,4 +83,30 @@ router.delete('/delete/:bookId', function(req, res) {
   });
 });
 
+// '/books/update/:bookId' 'PUT' AJAX
+router.put('/update/:bookId', function(req, res) {
+  var bookId = req.params.bookId; // store bookId in variable for deletion
+  var title = req.body.title;
+  var author = req.body.author;
+  console.log('Deleting book: ', bookId);
+  // UPDATE "books" SET title = 'HANGRY CATERPILLAR', author = 'Eric Carl' WHERE "id" = 52;
+  pool.connect(function(errorConnectingToDatabase, db, done){
+    if(errorConnectingToDatabase) {
+      console.log('Error connecting to the database.');
+      res.send(500);
+    } else {
+      // We connected!!!!
+      db.query(("UPDATE books SET title = $1, author = $2 WHERE id = $3;"), [title, author, bookId],function(queryError, result) {
+        done();
+        if(queryError) {
+          console.log('Error making query.');
+          res.send(500);
+        } else {
+          res.sendStatus(201);
+        }
+      }); // end db.query
+    } // end errorConnectingToDatabase if/else
+  });
+});
+
 module.exports = router;
