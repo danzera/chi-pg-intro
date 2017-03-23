@@ -24,7 +24,7 @@ router.get('/', function(req, res){
         done();
         if(queryError) {
           console.log('Error making query.');
-          res.send(500);
+          res.sendStatus(500);
         } else {
           // console.log(result); // Good for debugging
           res.send(result.rows);
@@ -38,6 +38,8 @@ router.post('/add', function(req, res){
   console.log(req.body);
   var title = req.body.title;
   var author = req.body.author;
+  var publisher = req.body.publisher;
+  var year = req.body.year;
   // INSERT INTO "books" ("author", "title") VALUES ('David Mitchel','Cloud Atlas');
   pool.connect(function(errorConnectingToDatabase, db, done){
     if(errorConnectingToDatabase) {
@@ -45,13 +47,13 @@ router.post('/add', function(req, res){
       res.send(500);
     } else {
       // We connected!!!!
-      db.query('INSERT INTO "books" ("author", "title")' +
-               ' VALUES ($1,$2);',
-               [author, title], function(queryError, result){
+      db.query('INSERT INTO books (author, title, publisher, year) ' +
+               'VALUES ($1,$2,$3,$4);',
+               [author, title, publisher, year], function(queryError, result){
         done();
         if(queryError) {
           console.log('Error making query.');
-          res.send(500);
+          res.sendStatus(500);
         } else {
           res.sendStatus(201);
         }
@@ -74,7 +76,7 @@ router.delete('/delete/:bookId', function(req, res) {
         done();
         if(queryError) {
           console.log('Error making query.');
-          res.send(500);
+          res.sendStatus(500);
         } else {
           res.sendStatus(201);
         }
@@ -88,19 +90,24 @@ router.put('/update/:bookId', function(req, res) {
   var bookId = req.params.bookId; // store bookId in variable for deletion
   var title = req.body.title;
   var author = req.body.author;
-  console.log('Deleting book: ', bookId);
+  var publisher = req.body.publisher;
+  var year = req.body.year;
+  console.log('Updating book: ', bookId);
   // UPDATE "books" SET title = 'HANGRY CATERPILLAR', author = 'Eric Carl' WHERE "id" = 52;
   pool.connect(function(errorConnectingToDatabase, db, done){
     if(errorConnectingToDatabase) {
       console.log('Error connecting to the database.');
-      res.send(500);
+      res.sendStatus(500);
     } else {
       // We connected!!!!
-      db.query(("UPDATE books SET title = $1, author = $2 WHERE id = $3;"), [title, author, bookId],function(queryError, result) {
+      db.query(("UPDATE books " +
+                "SET title = $1, author = $2, publisher = $3, year = $4 " +
+                "WHERE id = $5;"),
+                [title, author, publisher, year, bookId], function(queryError, result) {
         done();
         if(queryError) {
           console.log('Error making query.');
-          res.send(500);
+          res.sendStatus(500);
         } else {
           res.sendStatus(201);
         }

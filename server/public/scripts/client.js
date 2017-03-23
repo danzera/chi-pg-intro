@@ -25,38 +25,62 @@ $(document).ready(function(){
     bookId = $(this).data('book');
     $('#title').val($(this).data('title'));
     $('#author').val($(this).data('author'));
+    $('#publisher').val($(this).data('publisher'));
+    $('#year').val($(this).data('year'));
   });
 
-  $('#bookForm').on('submit', function(event){
+  $('#bookForm').on('submit', function(event) {
     event.preventDefault();
-    console.log($('#title').val(), $('#author').val());
-    if(editing) {
-      editing = false;
-      $('#formTitle').text("Add new entry");
-      $.ajax({
-        type: "PUT", // Similar to POST (data & req.body)
-        url: "books/update/" + bookId, // e.g. /books/update/53
-        data: {title: $('#title').val(), author:$('#author').val()},
-        success: function(response) {
-          // Refresh our data
-          getBooks();
-        }
-      });
+    if ($('#title').val() === '' ||
+        $('#author').val() === '' ||
+        $('#publisher').val() === '' ||
+        $('#year').val() === '') {
+          alert('zOMG! Please complete all input fields!');
     } else {
-      $.ajax({
-        type: "POST",
-        url: "/books/add",
-        data: {title: $('#title').val(), author:$('#author').val()},
-        success: function(response) {
-          // Refresh our data
-          getBooks();
-        }
-      });
-    }
-    $('#title').val('');
-    $('#author').val('');
+      console.log($('#title').val(), $('#author').val());
+      if (editing) {
+        editing = false;
+        $('#formTitle').text("Add new entry");
+        $.ajax({
+          type: "PUT", // Similar to POST (data & req.body)
+          url: "books/update/" + bookId, // e.g. /books/update/53
+          data: {
+            title: $('#title').val(),
+            author:$('#author').val(),
+            publisher: $('#publisher').val(),
+            year: $('#year').val()},
+          success: function(response) {
+            console.log('did we get here?');
+            // Refresh our data
+            getBooks();
+          } // end success
+        }); // end AJAX
+      } else { // !editing
+        $.ajax({
+          type: "POST",
+          url: "/books/add",
+          data: {
+            title: $('#title').val(),
+            author:$('#author').val(),
+            publisher: $('#publisher').val(),
+            year: $('#year').val()},
+          success: function(response) {
+            // Refresh our data
+            getBooks();
+          } // end success
+        }); // end AJAX
+      } // end else AJAX statement
+      clearForm();
+    } // end main else statement
   });
 });
+
+function clearForm() {
+  $('#title').val('');
+  $('#author').val('');
+  $('#publisher').val('');
+  $('#year').val('');
+}
 
 function getBooks() {
   $.ajax({
@@ -79,7 +103,9 @@ function getBooks() {
         $el.append('<td><button class="edit" data-book="' +
         book.id + '" data-author="' +
         book.author + '" data-title="'+
-        book.title +'">Edit</button></td>');
+        book.title + '"data-publisher="' +
+        book.publisher + '"data-year="' +
+        book.year +'">Edit</button></td>');
       }
     }
   });
